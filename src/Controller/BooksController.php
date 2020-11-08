@@ -95,7 +95,7 @@ public function update(int $id, Request $request): Response
 /** 
    * @Route("/delete/{id}", name="app_book_delete") 
 */ 
-public function delete(int $id): Response
+public function deleteBook(int $id): Response
    { 
       $doct = $this->getDoctrine()->getManager(); 
       $bk = $doct->getRepository('App:Bookz')->find($id); 

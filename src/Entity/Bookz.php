@@ -32,12 +32,12 @@ class Bookz
      */
     private $year;
 
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function getName(): ?string
+    public function getName(): string
     {
         return $this->name;
     }
@@ -49,7 +49,7 @@ class Bookz
         return $this;
     }
 
-    public function getAuthor(): ?string
+    public function getAuthor(): string
     {
         return $this->author;
     }
@@ -61,7 +61,7 @@ class Bookz
         return $this;
     }
 
-    public function getYear(): ?int
+    public function getYear(): int
     {
         return $this->year;
     }

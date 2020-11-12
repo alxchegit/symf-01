@@ -33,8 +33,14 @@ class BooksController extends AbstractController
          $form = $this->createFormBuilder($bookz) 
             ->add('Name', TextType::class, array('label' => 'Название')) 
             ->add('Author', TextType::class, array('label' => 'Автор')) 
-            ->add('Year', TextType::class, array('label' => 'Год')) 
-            ->add('save', SubmitType::class, array('label' => 'Добавить')) 
+            ->add('Year', NumberType::class, array(
+               'label' => 'Год',
+               'html5' => true,
+               'attr' => [
+                  'min' => 1,
+                  'max' => date("Y"),
+                  ]
+               ))            ->add('save', SubmitType::class, array('label' => 'Добавить')) 
             ->getForm();  
 
          $form->handleRequest($request);  
@@ -71,8 +77,14 @@ public function update(int $id, Request $request): Response
    $form = $this->createFormBuilder($bk) 
       ->add('Name', TextType::class, array('label' => 'Название')) 
       ->add('Author', TextType::class, array('label' => 'Автор')) 
-      ->add('Year', TextType::class, array('label' => 'Год')) 
-      ->add('save', SubmitType::class, array('label' => 'Обновить')) 
+      ->add('Year', NumberType::class, array(
+         'label' => 'Год',
+         'html5' => true,
+         'attr' => [
+            'min' => 1,
+            'max' => date("Y"),
+            ]
+         ))      ->add('save', SubmitType::class, array('label' => 'Обновить')) 
       ->getForm();  
    
    $form->handleRequest($request);  

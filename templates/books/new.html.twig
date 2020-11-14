@@ -51,8 +51,9 @@
       } 
    </style> 
 {% endblock %}  
-{% block body %} 
-   <h3>Добавление книги:</h3> 
+{% block body %}
+   
+   <h3>{{ title }}</h3> 
    <div id = "simpleform"> 
       {{ form_start(form) }} 
       {{ form_widget(form) }} 

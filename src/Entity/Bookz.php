@@ -14,6 +14,8 @@ class Bookz
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * 
+     * 
      */
     private $id;
 
@@ -29,6 +31,7 @@ class Bookz
 
     /**
      * @ORM\Column(type="integer")
+     *
      */
     private $year;
 

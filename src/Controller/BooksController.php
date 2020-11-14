@@ -7,20 +7,22 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;  
 use Symfony\Component\HttpFoundation\Request; 
 use Symfony\Component\Form\Extension\Core\Type\TextType; 
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;  
-
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use App\Form\AddBookType;
 
 class BooksController extends AbstractController
 { 
-
+  
 /**
  * @Route("/", name="app_book_list")
  */
-   public function listAction(): Response
+   public function index(): Response
    {
       $bk = $this->getDoctrine()
-      ->getRepository('App:Bookz') 
-      ->findAll(); 
+         ->getRepository(Bookz::class)     
+         ->findAll(); 
+        
       return $this->render('books/index.html.twig', array('data' => $bk)); 
    }
 
@@ -30,35 +32,25 @@ class BooksController extends AbstractController
    public function newAction(Request $request): Response
    { 
       $bookz = new Bookz();
-         $form = $this->createFormBuilder($bookz) 
-            ->add('Name', TextType::class, array('label' => 'Название')) 
-            ->add('Author', TextType::class, array('label' => 'Автор')) 
-            ->add('Year', NumberType::class, array(
-               'label' => 'Год',
-               'html5' => true,
-               'attr' => [
-                  'min' => 1,
-                  'max' => date("Y"),
-                  ]
-               ))            ->add('save', SubmitType::class, array('label' => 'Добавить')) 
-            ->getForm();  
+        
+      $form = $this->createForm(AddBookType::class, $bookz);
+      $form->handleRequest($request);  
 
-         $form->handleRequest($request);  
-
-         if ($form->isSubmitted() && $form->isValid()) { 
-            $book = $form->getData(); 
-            $doct = $this->getDoctrine()->getManager();  
-            
-            $doct->persist($book);  
-
-            $doct->flush();  
-            
-            return $this->redirectToRoute('app_book_list'); 
-         } else { 
-            return $this->render('books/new.html.twig', array( 
-               'form' => $form->createView(), 
-            )); 
-         } 
+      if ($form->isSubmitted() && $form->isValid()) { 
+         
+         $book = $form->getData(); 
+         $doct = $this->getDoctrine()->getManager();  
+         
+         $doct->persist($book);
+         $doct->flush();  
+         
+         return $this->redirectToRoute('app_book_list'); 
+      } else { 
+         return $this->render('books/new.html.twig', array( 
+            'form' => $form->createView(),
+            'title' => 'Добавить книгу'
+         )); 
+      } 
    }
 
 /** 
@@ -67,25 +59,15 @@ class BooksController extends AbstractController
 public function update(int $id, Request $request): Response
 { 
    $doct = $this->getDoctrine()->getManager(); 
-   $bk = $doct->getRepository('App:Bookz')->find($id);  
+   $bk = $doct->getRepository(Bookz::class)
+         ->find($id);  
     
    if (!$bk) { 
       throw $this->createNotFoundException( 
          'No book found for id '.$id 
       ); 
    }  
-   $form = $this->createFormBuilder($bk) 
-      ->add('Name', TextType::class, array('label' => 'Название')) 
-      ->add('Author', TextType::class, array('label' => 'Автор')) 
-      ->add('Year', NumberType::class, array(
-         'label' => 'Год',
-         'html5' => true,
-         'attr' => [
-            'min' => 1,
-            'max' => date("Y"),
-            ]
-         ))      ->add('save', SubmitType::class, array('label' => 'Обновить')) 
-      ->getForm();  
+   $form = $this->createForm(AddBookType::class, $bk);
    
    $form->handleRequest($request);  
    
@@ -99,7 +81,8 @@ public function update(int $id, Request $request): Response
       return $this->redirectToRoute('app_book_list'); 
    } else {  
       return $this->render('books/new.html.twig', array(
-         'form' => $form->createView(), 
+         'form' => $form->createView(),
+         'title' => 'Редактировать книгу'
       )); 
    } 
 }
@@ -107,13 +90,15 @@ public function update(int $id, Request $request): Response
 /** 
    * @Route("/delete/{id}", name="app_book_delete") 
 */ 
-public function deleteBook(int $id): Response
+public function delete(int $id): Response
    { 
       $doct = $this->getDoctrine()->getManager(); 
-      $bk = $doct->getRepository('App:Bookz')->find($id); 
+      $bk = $doct->getRepository(Bookz::class)
+      ->find($id); 
       
       if (!$bk) { 
-         throw $this->createNotFoundException('No book found for id '.$id); 
+         throw $this->createNotFoundException(
+            'No book found for id '.$id); 
       } 
       $doct->remove($bk); 
       $doct->flush(); 

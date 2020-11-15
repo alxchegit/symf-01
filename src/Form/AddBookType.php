@@ -24,7 +24,7 @@ class AddBookType extends AbstractType
                 'attr' => [
                    'min' => 1,
                    'max' => date("Y"),
-                   ]
+                ],
                 ))
             ->add('save', SubmitType::class, array('label' => 'Добавить')) 
 

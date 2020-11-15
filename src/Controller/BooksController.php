@@ -2,14 +2,11 @@
 namespace App\Controller; 
 
 use App\Entity\Bookz;
-use Symfony\Component\Routing\Annotation\Route;
+use App\Form\AddBookType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;  
 use Symfony\Component\HttpFoundation\Request; 
-use Symfony\Component\Form\Extension\Core\Type\TextType; 
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
-use App\Form\AddBookType;
 
 class BooksController extends AbstractController
 { 

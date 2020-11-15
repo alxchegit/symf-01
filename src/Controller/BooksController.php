@@ -3,6 +3,7 @@ namespace App\Controller;
 
 use App\Entity\Bookz;
 use App\Form\AddBookType;
+use App\Repository\BookzRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;  
@@ -14,11 +15,9 @@ class BooksController extends AbstractController
 /**
  * @Route("/", name="app_book_list")
  */
-   public function index(): Response
+   public function index(BookzRepository $books): Response
    {
-      $bk = $this->getDoctrine()
-         ->getRepository(Bookz::class)     
-         ->findAll(); 
+      $bk = $books->findAll(); 
         
       return $this->render('books/index.html.twig', array('data' => $bk)); 
    }
@@ -53,11 +52,10 @@ class BooksController extends AbstractController
 /** 
 * @Route("/update/{id}", name = "app_book_update" ) 
 */ 
-public function update(int $id, Request $request): Response
+public function update(int $id, Request $request, BookzRepository $books): Response
 { 
-   $doct = $this->getDoctrine()->getManager(); 
-   $bk = $doct->getRepository(Bookz::class)
-         ->find($id);  
+    
+   $bk = $books->find($id);  
     
    if (!$bk) { 
       throw $this->createNotFoundException( 
@@ -69,12 +67,12 @@ public function update(int $id, Request $request): Response
    $form->handleRequest($request);  
    
    if ($form->isSubmitted() && $form->isValid()) { 
-      $book = $form->getData(); 
-      $doct = $this->getDoctrine()->getManager();  
-      
-      $doct->persist($book);  
-      
+      $book = $form->getData();
+
+      $doct = $this->getDoctrine()->getManager();      
+      $doct->persist($book);      
       $doct->flush(); 
+
       return $this->redirectToRoute('app_book_list'); 
    } else {  
       return $this->render('books/new.html.twig', array(
@@ -87,11 +85,10 @@ public function update(int $id, Request $request): Response
 /** 
    * @Route("/delete/{id}", name="app_book_delete") 
 */ 
-public function delete(int $id): Response
+public function delete(int $id, BookzRepository $books): Response
    { 
       $doct = $this->getDoctrine()->getManager(); 
-      $bk = $doct->getRepository(Bookz::class)
-      ->find($id); 
+      $bk = $books->find($id); 
       
       if (!$bk) { 
          throw $this->createNotFoundException(
@@ -99,6 +96,7 @@ public function delete(int $id): Response
       } 
       $doct->remove($bk); 
       $doct->flush(); 
+
       return $this->redirectToRoute('app_book_list'); 
    } 
 }  

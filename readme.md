@@ -18,10 +18,6 @@ php bin/console doctrine:database:create
 ### 4. Выполнить миграцию: 
 В терминале выполнить комманду:
 ```
-php bin/console make:migration
-```
-потом:
-```
 php bin/console doctrine:migrations:migrate
 ```
 ### 5. Запустить web-сервер symfony
